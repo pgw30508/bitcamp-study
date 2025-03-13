@@ -3,6 +3,7 @@ package bitcamp.myapp.dao;
 import bitcamp.myapp.vo.Board;
 import bitcamp.myapp.vo.Member;
 
+import java.io.FileNotFoundException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -17,7 +18,7 @@ public class MySQLBoardDao implements BoardDao {
     this.con = con;
   }
 
-  public List<Board> findAll() throws Exception {
+  public List<Board> findAll() {
     String sql = "select" +
             " b.board_id," +
             " b.title," +
@@ -50,10 +51,12 @@ public class MySQLBoardDao implements BoardDao {
       }
 
       return list;
+    } catch (Exception e) {
+      throw new DaoException(e);
     }
   }
 
-  public int insert(Board board) throws Exception {
+  public int insert(Board board) {
     /*
       insert into ed_board(title, content, member_id)
       values ('', '', '')
@@ -66,11 +69,13 @@ public class MySQLBoardDao implements BoardDao {
 
     try (Statement stmt = con.createStatement()) {
       return stmt.executeUpdate(sql);
+    } catch (Exception e) {
+      throw new DaoException(e);
     }
 
   }
 
-  public Board findByNo(int no) throws Exception {
+  public Board findByNo(int no) {
     String sql = "select" +
             "         b.board_id," +
             "         b.title," +
@@ -105,10 +110,12 @@ public class MySQLBoardDao implements BoardDao {
       board.setWriter(member);
 
       return board;
+    } catch (Exception e) {
+      throw new DaoException(e);
     }
   }
 
-  public int update(Board board) throws Exception {
+  public int update(Board board) {
     String sql = "update ed_board set " +
             "          title='" + board.getTitle() + "'," +
             "          content='" + board.getContent() + "'" +
@@ -117,15 +124,20 @@ public class MySQLBoardDao implements BoardDao {
 
     try (Statement stmt = con.createStatement()) {
       return stmt.executeUpdate(sql);
+    } catch (Exception e) {
+      throw new DaoException(e);
     }
   }
 
-  public int delete(int no) throws Exception {
+  public int delete(int no) {
     String sql = "delete from ed_board" +
             "    where board_id=" + no;
 
     try (Statement stmt = con.createStatement()) {
       return stmt.executeUpdate(sql);
+    } catch (Exception e) {
+      throw new DaoException(e);
     }
   }
+
 }

@@ -1,10 +1,10 @@
 package bitcamp.myapp.listener;
 
 import bitcamp.myapp.dao.BoardDao;
-import bitcamp.myapp.dao.MySQLBoardDao;
 import bitcamp.myapp.dao.MemberDao;
-import bitcamp.myapp.service.BoardService;
-import bitcamp.myapp.service.MemberService;
+import bitcamp.myapp.dao.MySQLBoardDao;
+import bitcamp.myapp.dao.MySQLMemberDao;
+import bitcamp.myapp.service.*;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -38,14 +38,17 @@ public class ContextLoaderListener implements ServletContextListener {
 
       ServletContext ctx = sce.getServletContext();
 
-      MemberDao memberDao = new MemberDao(con);
+      MySQLMemberDao memberDao = new MySQLMemberDao(con);
       MySQLBoardDao boardDao = new MySQLBoardDao(con);
 
-      MemberService memberService = new MemberService(memberDao);
+      DefaultMemberService memberService = new DefaultMemberService(memberDao);
       ctx.setAttribute("memberService", memberService);
 
-      BoardService boardService = new BoardService(boardDao);
+      DefaultBoardService boardService = new DefaultBoardService(boardDao);
       ctx.setAttribute("boardService", boardService);
+
+      NCPObjectStorageService storageService = new NCPObjectStorageService();
+      ctx.setAttribute("storageService", storageService);
 
       System.out.println("웹애플리케이션 실행 환경 준비!");
 
